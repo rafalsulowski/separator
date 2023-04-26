@@ -1,20 +1,52 @@
-// TestSeparator.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
+#include <string>
+#include <vector>
 
 int main()
-{
-    std::cout << "Hello World!\n";
+{   
+    //alg. odczytu
+    // a   ;  b;c
+        //beg = 0
+        //w petli
+        //1. znajdz pozycje pierwszego separatora
+        //2. zrob substr(beg, separator)
+        //3. przesun beg do najblizszego znaku ktory nie jest separatorem 
+        //4. dodaj wartosc do vectora
+
+
+    //alg. odczytu
+        //beg = 0
+        //w petli
+        //1. znajdz pozycje separatora
+        //2. zrob substr(beg, separator)
+        //3. usun jesli sa cudzyslowy z poczatku i konca
+        //4. beg = separator + 1
+        //5. dodaj do vectora
+
+    std::string m_Delimeter = "; ";
+    std::string LightDelimeters = " \t";
+    std::string str = "a\t;          b        ;c";
+    std::vector<std::string> vec;
+
+
+    //"a\t"    ;   "b"    ;; "c" c
+
+
+    int beg = 0;
+    while (beg < str.size())
+    {
+        int end = str.find_first_of(m_Delimeter, beg);
+
+        std::string buf = str.substr(beg, end - beg);
+        if (end - beg == 1)
+            buf = "";
+
+        beg = str.find_first_not_of(m_Delimeter, end);
+        vec.push_back(buf);
+    }
+
+    for (const auto el : vec)
+    {
+        std::cout << '\'' << el << '\'' << std::endl;
+    }
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

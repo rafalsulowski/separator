@@ -1,0 +1,3 @@
+﻿  TestSeparator.cpp
+C:\Users\01159502\source\repos\TestSeparator\TestSeparator\TestSeparator.cpp(36,16): warning C4018: '<': signed/unsigned mismatch
+  TestSeparator.vcxproj -> C:\Users\01159502\source\repos\TestSeparator\Debug\TestSeparator.exe
