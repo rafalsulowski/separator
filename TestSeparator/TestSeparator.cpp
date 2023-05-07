@@ -8,7 +8,6 @@ int main()
     /*
     ---------------------
     Separatorem jest TYLKO ;
-    
     a;b;c   -> |a|b|c|
     a;;b    -> |a||c|
     a ; b;  -> |a | b||
@@ -33,44 +32,50 @@ int main()
     a   ,   b c -> |a|,|b|c|
     a  , ,   b c -> |a|,|,||b|c|
     a\t , b   |a\t|,|b|  
-    
-
-    biale znaki jako separatory nalezy skleic!
-
-
-    Algorytm:
-
-    1. wczytaj najbli¿szy separator
-    2. wytnij stringa od beg do separator
-    3. ustaw beg na separator
-    4. dodaj wyciety framgent do wektora
-    5. Jeœli separatorem jest znak bia³y to beg ustaw na nastêpny znak znacz¹cy (sprawdzjac przy okazji czy nie wystapilo wiecej niz jedno wystapienie separatora ciezkiego
-    jesli wystapilo to dodaj tyle pustych wyrazow do tablicy
-
-
-
     ---------------------
     */
     
+
     std::multimap<std::string, std::vector<std::string>> lineTab;
     std::vector<std::string> vec;
     std::string rec = "";
 
-
-    //Zestaw danych do destowania dwoch separatorow
-    std::string m_Delimeter = ";";
+    //Zestaw danych do destowania jednego separatora
+    /*std::string m_Delimeter = ";";
     std::string m_HardDelimeter = ";";
     std::string m_LightDelimeter = "";
     lineTab.insert(std::make_pair(";;;\"Ala\";;  \"ma\"  ;  \"kota\" ;;;", std::vector<std::string>{"", "", "", "\"Ala\"", "", "  \"ma\"  ", "  \"kota\" ", "", "", ""}));
     lineTab.insert(std::make_pair(";;;\"Ala\";;  \"ma\"  ;  \"kota\" ;;;", std::vector<std::string>{"", "", "", "\"Ala\"", "", "  \"ma\"  ", "  \"kota\" ", "", "", ""}));
-    /*lineTab.push_back("\"kota\";psa;;;");
-    lineTab.push_back("\"Ala\";\"ma\";\"kota\"");
-    lineTab.push_back("\"Ala\"  ;  \"ma\"  ;  \"kota\"");
-    lineTab.push_back(";\"Ala\"  ;  \"ma\"  ;  \"kota\"");
-    lineTab.push_back(";\"Ala\"  ;  \"ma\"  ;  \"kota\";;");
-    lineTab.push_back(";;\"Ala\"  ;  \"ma\"  ;  \"kota\";");
-    lineTab.push_back("\"Ala\";;  \"ma\"  ;;  \"kota\"   ;;\"psa\"");*/
+    lineTab.insert(std::make_pair("a;b;c", std::vector<std::string>{"a", "b", "c"}));
+    lineTab.insert(std::make_pair("a;;c", std::vector<std::string>{"a", "", "c"}));
+    lineTab.insert(std::make_pair("a; ;c", std::vector<std::string>{"a", " ", "c"}));
+    lineTab.insert(std::make_pair("a;b;c;", std::vector<std::string>{"a", "b", "c", ""}));
+    lineTab.insert(std::make_pair(";a;b;c;", std::vector<std::string>{"", "a", "b", "c", ""}));
+    lineTab.insert(std::make_pair(";a ; b; c;", std::vector<std::string>{"", "a ", " b", " c", ""}));
+    lineTab.insert(std::make_pair("\"a\";\"b\";\"c\"", std::vector<std::string>{"\"a\"", "\"b\"", "\"c\""}));
+    lineTab.insert(std::make_pair("\"aba\";\"sfb\";\"23c\"", std::vector<std::string>{"\"aba\"", "\"sfb\"", "\"23c\""}));
+    lineTab.insert(std::make_pair("\"a;b;a\";\"s  fb;\";\";23 c \"", std::vector<std::string>{"\"a;b;a\"", "\"s  fb;\"", "\";23 c \""}));
+    lineTab.insert(std::make_pair("\"a;b;a\";\"s  fb;\";;23 c \"", std::vector<std::string>{"\"a;b;a\"", "\"s  fb;\"", "", "23 c \""}));*/
 
+    //Zestaw danych do destowania dwoch separatorow
+    std::string m_Delimeter = "; ";
+    std::string m_HardDelimeter = ";";
+    std::string m_LightDelimeter = " ";
+    lineTab.insert(std::make_pair(";;;\"Ala\";; \"ma\" ;  \"kota\" ;;;", std::vector<std::string>{"", "", "", "\"Ala\"", "", "\"ma\"", "\"kota\"", "", "", ""}));
+    lineTab.insert(std::make_pair(";a b ; b; c;", std::vector<std::string>{"", "a", "b", "b", "c", ""}));
+    lineTab.insert(std::make_pair("a; ;c", std::vector<std::string>{"a", "", "c"}));
+    lineTab.insert(std::make_pair("a;b;c", std::vector<std::string>{"a", "b", "c"}));
+    lineTab.insert(std::make_pair("a;;c", std::vector<std::string>{"a", "", "c"}));
+    lineTab.insert(std::make_pair("a ;       ; c", std::vector<std::string>{"a", "", "c"}));
+    lineTab.insert(std::make_pair("a h ;b;c;", std::vector<std::string>{"a", "h", "b", "c", ""}));
+    lineTab.insert(std::make_pair(" ; a;  ;  ;   \"sh  f ;; ;  fa s\";c ;", std::vector<std::string>{"", "a", "", "", "\"sh  f ;; ;  fa s\"","c", ""}));
+    lineTab.insert(std::make_pair(";a;b;c;", std::vector<std::string>{"", "a", "b", "c", ""}));
+    lineTab.insert(std::make_pair("\"a\";\"b\";\"c\"", std::vector<std::string>{"\"a\"", "\"b\"", "\"c\""}));
+    lineTab.insert(std::make_pair("\"a   ba\";\"sf b\";\"23c\"", std::vector<std::string>{"\"a   ba\"", "\"sf b\"", "\"23c\""}));
+    lineTab.insert(std::make_pair("\"a;b;a\";\"s  fb;\";\";23 c \"", std::vector<std::string>{"\"a;b;a\"", "\"s  fb;\"", "\";23 c \""}));
+    lineTab.insert(std::make_pair("\"a ;b ;a\";\"s  fb;\";;\"23 c \"", std::vector<std::string>{"\"a ;b ;a\"", "\"s  fb;\"", "", "\"23 c \""}));
+
+    
 
 
 
@@ -79,23 +84,25 @@ int main()
 
     /*
     
-    beg = 0
-    end = 0
-    flag = nullptr
-    quoteCounter = 0
-    ignoreDelimeter = false
+    beg = 0 - poczatek wycinania
+    end = 0 - koniec wycinania
+    flag = 0 - flaga pilnujaca aktualnej pozycji w linii (to znaczy co aktualnie robimy: zbieramy znaki do wyciecia / sklejamy separatory)
+    ignoreDelimeter = false - flaga wywolywana przez cudzyslow powodujaca ignorowanie wystapien separatorw w ciagu znakow objetych cudzyslowem
+    hardDelimeterRush = false; - flaga odpowiedzialna za pilnowanie wystapien pustych wyrazow pomiedzy separatorami ciezkimi
 
-    pobierz znak
-
-    jesli to wartosc np."b" && flaga NIE jest ustawiona na CHARACTER_COLLECTING to ustaw flage na CHARACTER_COLLECTING oraz ustaw beg i end na ten znak, jesli to cudzyslow to ustaw flage ignoreDelimeter na true, jesli nie to ustaw na false 
-    jesli to wartosc i flaga jest ustawiona na CHARACTER_COLLECTING to ustaw end na ta pozycje
-
-
-    jesli to separator i ignoreDelimeter jest true to ustaw end na ta pozycje
-    w przeciwnym raze {
-            jesli to separator i flaga jest ustawiona na CHARACTER_COLLECTING i ignoreDelimeter jest false to wytnij stringa od beg do end, dodaj do tablicy, ustaw flage na DELIMETER_GLUING, 
-           jesli to separator i flaga NIE jest ustawiona na CHARACTER_COLLECTING i ignoreDelimeter jest false to dla separatora miekkiego pomin itearcje, dla ciezkiego sprawdz czy poprzedni nie byl ciezkim lub indeksem -1 jesli tak to dodaj pusty string jesli nie to pomin
-        }
+    1. pobierz znak
+    2. jesli to wartosc np."b" to
+    {
+        3. jesli to cudzyslow to ustaw flage ignoreDelimeter na true 
+        4a. jesli flaga NIE jest ustawiona na CHARACTER_COLLECTING to ustaw flage na CHARACTER_COLLECTING oraz ustaw beg i end na ten znak, 
+        4b. jesli flaga jest ustawiona na CHARACTER_COLLECTING to ustaw end na ta pozycje
+    }
+    5. je¿eli jednak to separator to
+    {
+        6. jesli ignoreDelimeter jest true to ustaw end na ta pozycje
+        7a. jesli flaga jest ustawiona na CHARACTER_COLLECTING to wytnij stringa od beg do end, dodaj do tablicy, ustaw flage na DELIMETER_GLUING, 
+        7b. jesli flaga NIE jest ustawiona na CHARACTER_COLLECTING i ignoreDelimeter jest false to dla separatora miekkiego pomin itearcje, dla ciezkiego sprawdz czy poprzedni nie byl ciezkim lub indeksem -1 jesli tak to dodaj pusty string jesli nie to pomin
+    }
     */
 
 
@@ -107,87 +114,94 @@ int main()
     {
         std::string line = elem.first;
 
-        std::cout << "Badanie linii: \'" << line << "\'\t";
+        std::cout << "Linia:|" << line << "|\t";
+
 
         int beg = 0;
         int end = 0;
-        int flag = 0;
+        int characterCollecting = false;
         bool ignoreDelimeter = false;
+        bool hardDelimeterRush = true;
         std::string rec;
         vec.clear();
         for (int i = 0; i < line.size(); i++)
         {
-            if (m_Delimeter.find(line[i]) == -1)
-            { //znak to jakas wartosc
-                if (line[i] == '"') //jesli to cudzyslow to wlaczmy ignorowanie separatorow
+            if (m_Delimeter.find(line[i]) == -1 || ignoreDelimeter) //znak to jakas wartosc
+            {
+                if (line[i] == '"') //jesli to cudzyslow to zmieniamy stan ignorowania separatorow (pierwszy cudzyslow w³¹czy ignorowanie drugi wy³¹czy)
                     ignoreDelimeter = !ignoreDelimeter;
 
-                if (flag != CHARACTER_COLLECTING)
-                { //jesli wczesniej nie bylo znaku to teraz zaczynami gromadzic
-                    flag = CHARACTER_COLLECTING;
+                if (!characterCollecting) //rozpoczecia zbierania danych do wyciêcia
+                {
+                    characterCollecting = true;
+                    hardDelimeterRush = false;
                     beg = end = i;
                 }
-                else if (flag == CHARACTER_COLLECTING)
-                { //rozszerzanie zakresu substringa
+                else if (characterCollecting) //rozszerzanie zakresu wyciêcia
+                {
                     end = i;
                 }
             }
-            else if (m_Delimeter.find(line[i]) != -1)
-            { //znak to separator
-                if (ignoreDelimeter)
-                { //jesli jestesmy w srodku zdania to ignorujemy separatory
-                    end = i;
-                }
-                else
+            else if (m_Delimeter.find(line[i]) != -1) //znak to separator
+            {
+                if (characterCollecting) //wytnij zebrane dane
                 {
-                    if (flag == CHARACTER_COLLECTING)
-                    { //jesli separator ale do tej pory zbieralismy znaki to wytnij!
-                        rec = line.substr(beg, end - beg + 1);
-                        vec.push_back(rec);
-                    }
-                    else if (flag != CHARACTER_COLLECTING)
+                    rec = line.substr(beg, end - beg + 1);
+                    vec.push_back(rec);
+
+                    if (m_HardDelimeter.find(line[i]) != -1) //jeseli separator konczacy ciag znakow znaczacych jest ciezki to ustaw tymczasow¹ wartoœc pust¹ na true
+                        hardDelimeterRush = true;
+                    else
+                        hardDelimeterRush = false;
+                }
+                else if (!characterCollecting)
+                {
+                    if (m_LightDelimeter.find(line[i]) != -1) //sklej separator miekki
                     {
-                        if (m_LightDelimeter.find(line[i]) != -1)
-                        { //dla separatora miekkiego pomin
+                        continue;
+                    }
+                    else if (m_HardDelimeter.find(line[i]) != -1) //dla separatora ciezkiego:
+                    {
+                        if(hardDelimeterRush || i == line.size() - 1)
+                        {
+                            vec.push_back("");
+                        }
+                        else
+                        {
+                            hardDelimeterRush = true;
                             continue;
                         }
-                        else if (m_HardDelimeter.find(line[i]) != -1)
-                        { //dla separatora ciezkiego analizuj
-                            if (i == 0 || m_HardDelimeter.find(line[i - 1]) != -1)
-                            { //poprzednij znak to poczatek linii lub separator ciezki, dodajemy pusty string
-                                vec.push_back("");
-                            }
-                            else 
-                            { //jesli nie to pomin
-                                continue;
-                            }
-                        }
                     }
-                    flag = DELIMETER_GLUING;
                 }
+                characterCollecting = false;
             }
         }
 
-        if (m_HardDelimeter.find(line[line.size() - 1]) != -1)
+        /*if (m_HardDelimeter.find(line[line.size() - 1]) != -1)
         {
             vec.push_back("");
-        }
-        else if (flag == CHARACTER_COLLECTING) 
+        }*/
+        if (characterCollecting) 
         {
             rec = line.substr(beg, end - beg + 1);
             vec.push_back(rec);
         }
 
-        std::cout << "Rozwaizanie: ";
+
+
+
+
+        std::cout << "Rezultat pragramu:|";
         for (auto el : vec)
-            std::cout << "\'" << el << "\'  ";
-
+            std::cout << "" << el << "|";
+        std::cout << "  Oczekiwane:|";
+        for (auto el : elem.second)
+            std::cout << "" << el << "|";
         if(elem.second == vec)
-            printf("\x1B[32mWektor zgodny");
+            printf(" \x1B[32mWektor zgodny");
         else
-            printf("\x1B[31mWektor rozny od oczekiwanego");
+            printf(" \x1B[31mWektor niezgodny");
         printf("\x1B[37m\t\t");
-
         std::cout << "\n\n\n";
     }
 }
